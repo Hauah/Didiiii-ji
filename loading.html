@@ -442,7 +442,7 @@ const volumeButton = document.querySelector(".volume");
 
 volumeButton.addEventListener("pointerenter", function() {
 
-    if (started || attempts >= 8) return;
+    if (started || attempts >= 12) return;
 
     attempts++;
 
@@ -464,7 +464,7 @@ volumeButton.addEventListener("pointerenter", function() {
 
 volumeButton.addEventListener("click", function(event) {
 
-    if (attempts < 8) {
+    if (attempts < 12) {
         event.preventDefault();
         event.stopImmediatePropagation();
         return;
