@@ -367,7 +367,13 @@ footer {
 
         <h1 class="loadingTitle">Phle Song Play kro 👇🤧</h1>
 
-        <p class="loadingSubtitle">Jaldi karo nawww</p>
+        <p><p class="loadingSubtitle"><span id="delayed-text"></span></p>
+<script>
+  setTimeout(function() {
+    document.getElementById("delayed-text").textContent = "Jaldi karo nawww!!";
+  }, 6000); // 6000 milliseconds = 6 seconds
+</script>
+
 
         <button class="volume" onclick="startSurprise()">🔊</button>
 
