@@ -1,0 +1,604 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Didiiiiii ♡</title>
+
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Trebuchet MS', sans-serif;
+    background: #fff5f8;
+    color: #bb6d91;
+}
+
+/* LOADING SCREEN */
+#loadingScreen {
+    height: 100vh;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    background: #fff5f8;
+}
+
+.container {
+    padding: 30px;
+    animation: fadeIn 1.5s ease;
+}
+
+.cry img {
+    width: 120px;
+    height: 120px;
+    object-fit: contain;
+    filter: drop-shadow(0 8px 15px #f6b9d3);
+    animation: heartbeat 2s infinite;
+}
+
+.loadingTitle {
+    margin-top: 25px;
+    font-size: 29px;
+    color: #d875a0;
+}
+
+.loadingSubtitle {
+    margin-top: 12px;
+    font-size: 15px;
+    color: #b68b9f;
+}
+
+.loader {
+    width: 230px;
+    height: 7px;
+    background: #f8dce8;
+    border-radius: 20px;
+    margin: 15px auto;
+    overflow: hidden;
+    display: none;
+}
+
+.loader.show {
+    display: block;
+}
+
+.bar {
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(90deg, #f5a6c9, #d875a0);
+    border-radius: 20px;
+}
+
+.bar.run {
+    animation: progress 4s linear forwards;
+}
+
+/* SPEAKER */
+.volume {
+    margin-top: 25px;
+    font-size: 28px;
+    cursor: pointer;
+    background: white;
+    border: none;
+    border-radius: 50px;
+    padding: 12px 20px;
+    box-shadow: 0 5px 15px #f6d2e2;
+    transition: left 0.15s ease, top 0.15s ease;
+    position: relative;
+}
+
+.volume:hover {
+    transform: scale(1.1);
+}
+
+/* LOADING TEXT */
+.loadingText {
+    display: none;
+    margin-top: 15px;
+    font-size: 12px;
+    letter-spacing: 2px;
+    color: #c17b99;
+}
+
+.loadingText.show {
+    display: block;
+}
+
+/* SPARKLES */
+.sparkle {
+    position: absolute;
+    color: #f0a6c5;
+    animation: float 5s infinite ease-in-out;
+    pointer-events: none;
+}
+
+/* LYRICS */
+#lyricsBox {
+    position: fixed;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 90%;
+    text-align: center;
+    z-index: 500;
+    pointer-events: none;
+    display: none;
+}
+
+#lyrics {
+    font-size: 18px;
+    color: #d875a0;
+    font-weight: bold;
+    text-shadow: 0 2px 10px #f6b9d3;
+    animation: lyricGlow 2s infinite;
+    transition: opacity 0.5s;
+    line-height: 1.6;
+}
+
+/* MEMORIES SCREEN */
+#memoriesScreen {
+    display: none;
+    min-height: 100vh;
+    padding: 50px 20px;
+    background: #fff4f5;
+    color: #79565e;
+    text-align: center;
+}
+
+header {
+    margin-bottom: 35px;
+}
+
+header h1 {
+    font-size: 38px;
+    color: #d77f99;
+    margin-bottom: 12px;
+}
+
+header p {
+    font-size: 15px;
+    color: #a77c87;
+}
+
+.gallery {
+    max-width: 750px;
+    margin: auto;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+}
+
+.photo {
+    background: white;
+    padding: 10px;
+    border-radius: 18px;
+    box-shadow: 0 5px 18px #e9cbd2;
+    transition: 0.3s ease;
+    cursor: pointer;
+}
+
+.photo:hover {
+    transform: translateY(-7px) rotate(1deg);
+    box-shadow: 0 10px 25px #e4b7c4;
+}
+
+.photo img {
+    width: 100%;
+    height: 230px;
+    object-fit: cover;
+    border-radius: 12px;
+}
+
+.photo p {
+    padding: 12px 5px 5px;
+    font-size: 14px;
+}
+
+footer {
+    margin-top: 40px;
+    color: #c28b9b;
+    font-size: 14px;
+}
+
+/* PHOTO VIEWER */
+.viewer {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(35, 20, 28, 0.92);
+    z-index: 1000;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+.viewer.active {
+    display: flex;
+}
+
+.viewer img {
+    max-width: 95%;
+    max-height: 85vh;
+    object-fit: contain;
+    border-radius: 15px;
+    animation: zoom 0.3s ease;
+}
+
+.close {
+    position: absolute;
+    top: 20px;
+    right: 25px;
+    color: white;
+    font-size: 38px;
+    cursor: pointer;
+    background: none;
+    border: none;
+}
+
+/* LYRICS ON FULLSCREEN PHOTO */
+#viewerLyrics {
+    position: absolute;
+    bottom: 12%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 90%;
+    color: white;
+    font-size: 20px;
+    font-weight: bold;
+    text-align: center;
+    text-shadow: 0 0 12px #ff69a5, 0 0 20px #ff1493, 0 2px 5px #000;
+    pointer-events: none;
+    z-index: 2001;
+    animation: lyricGlow 2s infinite;
+}
+
+/* ANIMATIONS */
+@keyframes zoom {
+    from {
+        transform: scale(0.8);
+        opacity: 0;
+    }
+    to {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+@keyframes heartbeat {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.15); }
+}
+
+@keyframes progress {
+    to { width: 100%; }
+}
+
+@keyframes float {
+    0%, 100% {
+        transform: translateY(0) rotate(0);
+        opacity: 0.4;
+    }
+    50% {
+        transform: translateY(-35px) rotate(20deg);
+        opacity: 1;
+    }
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes lyricGlow {
+    0%, 100% {
+        text-shadow: 0 2px 10px #f6b9d3;
+    }
+    50% {
+        text-shadow: 0 2px 20px #ee91bb;
+    }
+}
+
+/* MOBILE */
+@media(max-width:500px) {
+    .loadingTitle { font-size: 24px; }
+
+    .cry img {
+        width: 100px;
+        height: 100px;
+    }
+
+    header h1 {
+        font-size: 29px;
+    }
+
+    .gallery {
+        gap: 12px;
+    }
+
+    .photo img {
+        height: 160px;
+    }
+
+    #lyrics {
+        font-size: 15px;
+    }
+
+    #viewerLyrics {
+        font-size: 17px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<!-- MUSIC -->
+<audio id="music" src="music.mp3" loop></audio>
+
+<!-- LOADING SCREEN -->
+<div id="loadingScreen">
+
+    <div class="sparkle" style="top:15%;left:15%;font-size:25px;">✧</div>
+    <div class="sparkle" style="top:25%;right:20%;font-size:18px;">♡</div>
+    <div class="sparkle" style="bottom:20%;left:22%;font-size:30px;">✦</div>
+    <div class="sparkle" style="bottom:15%;right:15%;font-size:22px;">✧</div>
+    <div class="sparkle" style="top:50%;left:8%;font-size:18px;">♡</div>
+    <div class="sparkle" style="top:60%;right:8%;font-size:26px;">✦</div>
+
+    <div class="container">
+
+        <div class="cry">
+            <img src="https://media.tenor.com/dUFSMab-AH4AAAAM/dog-meme-meme-dog.gif"
+                 alt="Crying dog meme">
+        </div>
+
+        <h1 class="loadingTitle">Phle Song Play kro 👇🤧</h1>
+
+        <p class="loadingSubtitle">Jaldi karo nawww</p>
+
+        <button class="volume" onclick="startSurprise()">🔊</button>
+
+        <div class="loader" id="loader">
+            <div class="bar" id="bar"></div>
+        </div>
+
+        <div class="loadingText" id="loadingText">
+            Ruko khul ne do nek...😭
+        </div>
+
+    </div>
+</div>
+
+<!-- LYRICS -->
+<div id="lyricsBox">
+    <p id="lyrics">Tu Baat Kare Ya Na Mujhse ♡</p>
+</div>
+
+<!-- MEMORIES SCREEN -->
+<div id="memoriesScreen">
+
+    <header>
+        <h1>Didiiiiii ♡</h1>
+        <p>Sorry nah👉👈😭🌷</p>
+    </header>
+
+    <div class="gallery">
+
+        <div class="photo">
+            <img src="photo1.jpeg" alt="Memory 1">
+            <p>CLICK 👆1</p>
+        </div>
+
+        <div class="photo">
+            <img src="photo2.jpeg" alt="Memory 2">
+            <p>CLICK 👆2</p>
+        </div>
+
+        <div class="photo">
+            <img src="photo3.jpeg" alt="Memory 3">
+            <p>CLICK 👆3</p>
+        </div>
+
+        <div class="photo">
+            <img src="photo4.jpeg" alt="Memory 4">
+            <p>CLICK 👆4</p>
+        </div>
+
+    </div>
+
+    <footer>
+        Apne bhai ko maaf kardo 😭😭😭
+    </footer>
+
+</div>
+
+<!-- FULLSCREEN VIEWER -->
+<div class="viewer" id="viewer" onclick="closeViewer(event)">
+    <button class="close" onclick="closeViewer(event)">×</button>
+    <img id="fullPhoto" src="" alt="Full size photo">
+    <p id="viewerLyrics"></p>
+</div>
+
+<script>
+
+/* SPEAKER BUTTON */
+let started = false;
+let attempts = 0;
+
+const volumeButton = document.querySelector(".volume");
+
+volumeButton.addEventListener("pointerenter", function() {
+
+    if (started || attempts >= 8) return;
+
+    attempts++;
+
+    volumeButton.style.position = "fixed";
+    volumeButton.style.zIndex = "9999";
+    volumeButton.style.transform = "none";
+    volumeButton.style.margin = "0";
+
+    const maxX = window.innerWidth - volumeButton.offsetWidth;
+    const maxY = window.innerHeight - volumeButton.offsetHeight;
+
+    const x = Math.random() * Math.max(0, maxX);
+    const y = Math.random() * Math.max(0, maxY);
+
+    volumeButton.style.left = x + "px";
+    volumeButton.style.top = y + "px";
+
+});
+
+volumeButton.addEventListener("click", function(event) {
+
+    if (attempts < 8) {
+        event.preventDefault();
+        event.stopImmediatePropagation();
+        return;
+    }
+
+});
+
+/* LYRICS */
+const lyrics = [
+    "Tu Baat Kare Ya Na Mujhse",
+    "Chahe Aankhon Ka Paigaam Na Le",
+    "Par Ye Matt Kehna Arey Oh Pagle",
+    "Mujhe Dekhna Tu Mera Naam Na Lae",
+    "Tujhse Mera Deen Dharam Hai Mujhse Teri Khudayi",
+    "Tujhse Mera Deen Dharam Hai Mujhse Teri Khudayi",
+    "Tu Bole To Ban Jaaun Main Bulleshah Saudayi",
+    "Main Bhi Nachun",
+    "Main Bhi Nachun Manaun Sohne Yaar Ko",
+    "Chalu Mai Teri Raah Bulleya"
+];
+
+const lyricElement = document.getElementById("lyrics");
+const lyricsBox = document.getElementById("lyricsBox");
+const viewerLyrics = document.getElementById("viewerLyrics");
+
+let lyricIndex = 0;
+let lyricInterval;
+
+function showLyrics() {
+
+    lyricElement.style.opacity = 0;
+
+    setTimeout(() => {
+
+        lyricElement.innerText = lyrics[lyricIndex];
+        viewerLyrics.innerText = lyrics[lyricIndex];
+        lyricElement.style.opacity = 1;
+
+        lyricIndex++;
+
+        if (lyricIndex >= lyrics.length) {
+            lyricIndex = 0;
+        }
+
+    }, 400);
+
+}
+
+/* START SURPRISE */
+function startSurprise() {
+
+    if (started) return;
+    started = true;
+
+    const music = document.getElementById("music");
+
+    music.volume = 1;
+
+    music.play().catch(error => {
+        console.log("Music playback failed:", error);
+    });
+
+    volumeButton.innerHTML = "🎵";
+    volumeButton.disabled = true;
+
+    document.getElementById("loader").classList.add("show");
+    document.getElementById("loadingText").classList.add("show");
+    document.getElementById("bar").classList.add("run");
+
+    // Show lyrics
+    lyricsBox.style.display = "block";
+    lyricIndex = 0;
+    showLyrics();
+
+    lyricInterval = setInterval(() => {
+        showLyrics();
+    }, 3500);
+
+    // Show memories after 4 seconds
+    setTimeout(() => {
+
+        document.getElementById("loadingScreen").style.display = "none";
+        document.getElementById("memoriesScreen").style.display = "block";
+        document.body.style.overflow = "auto";
+
+    }, 4000);
+}
+
+/* PHOTO VIEWER */
+const photos = document.querySelectorAll(".photo img");
+const viewer = document.getElementById("viewer");
+const fullPhoto = document.getElementById("fullPhoto");
+
+photos.forEach(photo => {
+
+    photo.addEventListener("click", () => {
+
+        fullPhoto.src = photo.src;
+        fullPhoto.alt = photo.alt;
+
+        viewer.classList.add("active");
+
+    });
+
+});
+
+function closeViewer(event) {
+
+    if (
+        event.target === viewer ||
+        event.target.classList.contains("close")
+    ) {
+
+        viewer.classList.remove("active");
+        fullPhoto.src = "";
+        viewerLyrics.innerText = "";
+
+    }
+
+}
+
+document.addEventListener("keydown", event => {
+
+    if (event.key === "Escape") {
+
+        viewer.classList.remove("active");
+        fullPhoto.src = "";
+        viewerLyrics.innerText = "";
+
+    }
+
+});
+
+</script>
+
+</body>
+</html>

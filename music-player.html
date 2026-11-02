@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+<body style="margin:0">
+<audio id="music" src="music.mp3" loop></audio>
+
+<script>
+window.addEventListener("message", function(event) {
+    if (event.data === "play") {
+        const music = document.getElementById("music");
+        music.volume = 1;
+        music.play();
+    }
+});
+</script>
+</body>
+</html>
